@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      	<meta charset="utf-8">
+      	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+      	<title><%= name %></title>
+
+
+        <!-- Bootstrap 3.3.7 -->
+        <link rel="stylesheet" href="static/bootstrap/css/bootstrap.min.css">
+
+          <!-- Font Awesome -->
+        <link rel="stylesheet" href="static/bootstrap/plugin/font-awesome/css/font-awesome.css">
+
+        <!-- Ionicons -->
+        <link rel="stylesheet" href="static/bootstrap/plugin/Ionicons/css/ionicons.min.css">
+
+        <!-- bootstrap slider -->
+        <link rel="stylesheet" href="static/bootstrap/plugin/bootstrap-slider/slider.css">
+
+        <!-- Theme style -->
+        <link rel="stylesheet" href="static/bootstrap/dist/css/AdminLTE.min.css">
+
+        <!-- AdminLTE Skins. Choose a skin from the css/skins
+               folder instead of downloading all of them to reduce the load. -->
+        <link rel="stylesheet" href="static/bootstrap/dist/css/skins/_all-skins.min.css">
+
+
+        <link rel="stylesheet" href="static/js/toast/toastr.css">
+        <link rel="stylesheet" href="static/js/sweetalert/sweetalert.css">
+
+
+      <!-- This is what you need -->
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7"></script>
+
+    </head>
+
+    <body class="hold-transition skin-blue sidebar-mini sidebar-collapse">
+
+
+      <div class="wrapper">
+
+
+              <header class="main-header">
+                <!-- Logo -->
+                <a href="#" class="logo">
+                    <span class="logo-mini"><b>GG</b>A</span>
+                    <span class="logo-lg"><b>General</b>GG</span>
+                </a>
+
+                <nav class="navbar navbar-static-top">
+                  <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button" id="mb_tb_btn">
+                      <span class="sr-only">Toggle navigation</span>
+                    </a>
+
+
+                    <div class="navbar-custom-menu">
+                      <ul class="nav navbar-nav">
+                          <li>
+                            <a href="#" data-toggle="control-sidebar" id="sb_tb_btn">
+                            <i class="fa fa-bars" id="ic_sb_tb_tb"></i></a>
+                          </li>
+                      </ul>
+                    </div>
+
+                </nav>
+              </header>
+
+
+
+
+
+
+
+              <!-- Left side column. contains the logo and sidebar -->
+              <aside class="main-sidebar" id="ms">
+                <!-- sidebar: style can be found in sidebar.less -->
+                <section class="sidebar">
+                  <!-- sidebar menu: : style can be found in sidebar.less -->
+                    <ul class="sidebar-menu" data-widget="tree">
+                      <li class="header">MAIN NAVIGATION</li>
+
+                      <li>
+                          <a href="/boolean_animation">
+                            <i class="fa fa-dashboard"></i> <span>General</span>
+                          </a>
+                      </li>
+                    </ul>
+                </section>
+              </aside>
+
+
+
+
+
+
+          <div class="content-wrapper" id="wrapper">
+                  <div class="col-lg-12">
+                      <br/><br/>
+                  </div>
+      	  			  <div class="col-lg-12">
+                          <div class="form-group">
+                                <label>Type Here</label>
+                                <textarea class="form-control" rows="10" placeholder="Enter ..." id="ta"></textarea>
+                          </div>
+                  </div>
+          </div>
+
+
+
+      </div>
+
+
+
+      <!-- jQuery 3 -->
+    	<script src="static/bootstrap/plugin/jquery/dist/jquery.min.js"></script>
+    	<!-- Bootstrap 3.3.7 -->
+    	<script src="static/bootstrap/plugin/bootstrap/dist/js/bootstrap.min.js"></script>
+      <script src="static/bootstrap/plugin/moment/min/moment.min.js"></script>
+      <!-- AdminLTE App -->
+      <script src="static/bootstrap/dist/js/adminlte.min.js"></script>
+      <!-- JAVASCRIPT LIBRARY-->
+    	<script src="static/js/toast/toastr.min.js"></script>
+    	<script src="static/js/sweetalert/sweetalert.min.js"></script>
+    	<script src="static/js/mathjs/math.js"></script>
+    	<script src="/socket.io/socket.io.js"></script>
+    	<script src="static/js/underscore-min.js"></script>
+
+    	<script src="static/bootstrap/plugin/pace.min.js"></script>
+    	<!-- JAVASCRIPT LIBRARY-->
+
+
+
+
+      <script type="text/javascript">
+            var arr = window.location.href.split("/");
+            var result = arr[0] + "//" + arr[2];
+            var socket = io.connect(result);
+
+            var success_notif = new Audio('static/sounds/success.mp3');
+
+            socket_service();
+
+
+            function socket_service() {
+              socket.emit('connection', "a client connected");
+
+
+
+              socket.on('message', function (data) {
+                  console.log(data);
+              });
+
+
+              socket.on('res_web_app_soi', function (data) {
+                  // console.log(data);
+                  const toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 5000
+                  });
+
+                  toast({
+                        type: 'success',
+                        title: data.status
+                  });
+
+                  success_notif.play();
+              });
+
+
+              socket.emit('disconnect', "client disconnected");
+
+            }
+
+
+            $("#ta").keyup(function(){
+                data = {
+                    "msgText": $(this).val(),
+                    "date"   : String(new Date())
+                }
+
+                socket.emit('web_app_soi', data);
+            });
+      </script>
+
+    </body>
+
+
+</html>
